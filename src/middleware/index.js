@@ -14,6 +14,18 @@ exports.hashPass = async (req, res, next) => {
       }
     };
 
+    exports.tokenCheck = async (req, res, next) => {
+      try {
+        const token =req.header("Authorization"); // grab token from Authorization hearder in the request
+        const decodedToken =jwt.verify(token,process.env.SECRET); //decode token using same secret that created the token
+        next();
+      } catch (error) {
+        console.log(error);
+        res.send({ error });
+      }
+    };
+    
+    
     exports.unHashPass = async (req, res, next) => {
         try {
           const verifyPass = await User.findOne({ username: req.body.username });
